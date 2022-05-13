@@ -7,6 +7,5 @@ $(objects): %: %.s
 	ld -o $@ $@.o
 
 clean:
-	rm -f maximum maximum.o
-	rm -f jump jump.o
-	rm -f hello hello.o
+	rm -f $(objects)
+	rm -f $(foreach obj,$(objects),$(obj).o)
