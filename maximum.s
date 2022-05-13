@@ -9,7 +9,7 @@
 # Note that for a .long array the following instruction must be used
 # in order to correctly access its elements:
 #
-#         mov arr(, r8, 4), %r9d
+#         mov arr(, %r8, 4), %r9d
 
 .section .data
 
