@@ -1,16 +1,10 @@
-all:
+objects = maximum.o jump.o hello.o
 
-maximum: maximum.s
-	as -o maximum.o maximum.s
-	ld -o maximum maximum.o
+all: $(objects)
 
-jump: jump.s
-	as -o jump.o jump.s
-	ld -o jump jump.o
-
-hello: hello.s
-	as -o hello.o hello.s
-	ld -o hello hello.o
+$(objects): %.o: %.s
+	as -o $@ $<
+	ld -o $* $@
 
 clean:
 	rm -f maximum maximum.o
