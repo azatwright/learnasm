@@ -4,8 +4,6 @@
 # %r9 - current value
 # %r10 - max value's index
 
-# Why is `arr(, $0, 4)` invalid?
-
 # Note that for a .long array the following instruction must be used
 # in order to correctly access its elements:
 #
