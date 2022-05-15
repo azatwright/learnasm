@@ -29,8 +29,8 @@ _start:
 #
 # args:
 #
-# 16(%rbp)  base
-# 24(%rbp)  power
+# 16(%rsp)  base
+# 24(%rsp)  power
 #
 .type power, @function
 power:
