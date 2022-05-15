@@ -1,4 +1,4 @@
-objects = maximum jump hello
+objects = maximum jump hello power
 
 all: $(objects)
 
