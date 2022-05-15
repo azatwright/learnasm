@@ -2,15 +2,15 @@
 .globl _start
 
 _start:
-	push $3
-	push $2
-	call power # pow(2 3)
+	push $3 # power
+	push $2 # base
+	call power
 	add $16, %rsp
 	push %rax
 
-	push $4
-	push $3
-	call power # pow(3 4)
+	push $4 # power
+	push $3 # base
+	call power
 	add $16, %rsp
 
 	# sum
