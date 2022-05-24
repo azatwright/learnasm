@@ -1,4 +1,4 @@
-asmresults = maximum jump hello power factorial
+asmresults = maximum jump hello power factorial tolower
 
 all:
 
