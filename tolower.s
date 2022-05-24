@@ -13,40 +13,55 @@
 .globl _start
 
 _start:
-	mov %rsp, %rbp
-	sub $16, %rsp
+	push $1
+	push $0
+	call ioToLower
+	add $16, %rsp
 
-	movq $0, -8(%rbp)  # nread
-
-mainloop:
-	mov $SYS_read, %rax
+	mov $SYS_exit, %rax
 	mov $0,        %rdi
+	syscall
+
+# args:
+#
+# 16(%rbp)  input fd
+# 24(%rbp)  output fd
+#
+.type ioToLower, @function
+ioToLower:
+	push %rbp
+	mov %rsp, %rbp
+	sub $8, %rsp
+
+	movq $0, -8(%rbp) # nread
+
+ioloop:
+	mov $SYS_read, %rax
+	mov 16(%rbp),  %rdi
 	mov $BUF,      %rsi
 	mov $NBUF,     %rdx
 	syscall
 	mov %rax, -8(%rbp)
 
 	cmp $0, -8(%rbp)
-	je mainloopStop
+	je ioloopStop
 
 	push -8(%rbp)
 	push $BUF
 	call strToLower
 	add $16, %rsp
 
-strcovnLoopStop:
 	mov $SYS_write, %rax
-	mov $1,         %rdi
+	mov 24(%rbp),   %rdi
 	mov $BUF,       %rsi
 	mov -8(%rbp),   %rdx
 	syscall
 
-	jmp mainloop
-mainloopStop:
-	mov $SYS_exit, %rax
-	mov $0,        %rdi
-	syscall
-
+	jmp ioloop
+ioloopStop:
+	mov %rbp, %rsp
+	pop %rbp
+	ret
 
 # args:
 #
