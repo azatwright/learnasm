@@ -1,4 +1,4 @@
-objects = maximum jump hello power factorial
+asmresults = maximum jump hello power factorial
 
 all:
 
@@ -7,5 +7,5 @@ all:
 	ld -o $@ $@.o
 
 clean:
-	rm -f $(objects)
-	rm -f $(foreach obj,$(objects),$(obj).o)
+	rm -f $(asmresults)
+	rm -f $(foreach result,$(asmresults),$(result).o)
