@@ -2,10 +2,6 @@ objects = maximum jump hello power factorial
 
 all:
 
-$(objects): %: %.s
-	as -o $@.o $<
-	ld -o $@ $@.o
-
 %: %.s
 	as -o $@.o $<
 	ld -o $@ $@.o
