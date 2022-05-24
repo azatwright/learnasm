@@ -1,6 +1,6 @@
 objects = maximum jump hello power factorial
 
-all: $(objects)
+all:
 
 $(objects): %: %.s
 	as -o $@.o $<
