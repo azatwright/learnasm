@@ -17,7 +17,6 @@ _start:
 	sub $16, %rsp
 
 	movq $0, -8(%rbp)  # nread
-	movq $0, -16(%rbp) # i
 
 mainloop:
 	mov $SYS_read, %rax
@@ -30,23 +29,10 @@ mainloop:
 	cmp $0, -8(%rbp)
 	je mainloopStop
 
-	movq $0, -16(%rbp)
-strconvLoop:
-	mov -16(%rbp), %rax
-	cmp -8(%rbp), %rax
-	jge strcovnLoopStop
-
-	cmpb $65, BUF(, %rax, 1)
-	jl strconvLoopContinue
-	cmpb $90, BUF(, %rax, 1)
-	jg strconvLoopContinue
-
-	sub $65, BUF(, %rax, 1)
-	add $97, BUF(, %rax, 1)
-
-strconvLoopContinue:
-	incq -16(%rbp)
-	jmp strconvLoop
+	push -8(%rbp)
+	push $BUF
+	call strToLower
+	add $16, %rsp
 
 strcovnLoopStop:
 	mov $SYS_write, %rax
@@ -60,3 +46,43 @@ mainloopStop:
 	mov $SYS_exit, %rax
 	mov $0,        %rdi
 	syscall
+
+
+# args:
+#
+# 16(%rbp)  str
+# 24(%rbp)  len
+#
+# registers used:
+#
+# r12  str
+# r13  i
+#
+.type strToLower, @function
+strToLower:
+	push %rbp
+	mov %rsp, %rbp
+
+	mov 16(%rbp), %r12
+
+	mov $0, %r13
+strToLowerLoop:
+	cmp 24(%rbp), %r13
+	jge strToLowerLoopStop
+
+	cmpb $65, (%r12, %r13, 1)
+	jl strToLowerLoopContinue
+	cmpb $90, (%r12, %r13, 1)
+	jg strToLowerLoopContinue
+
+	sub $65, (%r12, %r13, 1)
+	add $97, (%r12, %r13, 1)
+
+strToLowerLoopContinue:
+	inc %r13
+	jmp strToLowerLoop
+strToLowerLoopStop:
+
+	mov %rbp, %rsp
+	pop %rbp
+	ret
