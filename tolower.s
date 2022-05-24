@@ -70,13 +70,13 @@ strToLowerLoop:
 	cmp 24(%rbp), %r13
 	jge strToLowerLoopStop
 
-	cmpb $65, (%r12, %r13, 1)
+	cmpb $'A', (%r12, %r13, 1)
 	jl strToLowerLoopContinue
-	cmpb $90, (%r12, %r13, 1)
+	cmpb $'Z', (%r12, %r13, 1)
 	jg strToLowerLoopContinue
 
-	sub $65, (%r12, %r13, 1)
-	add $97, (%r12, %r13, 1)
+	sub $'A', (%r12, %r13, 1)
+	add $'a', (%r12, %r13, 1)
 
 strToLowerLoopContinue:
 	inc %r13
