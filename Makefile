@@ -1,4 +1,4 @@
-asmresults = maximum jump hello power factorial tolower
+asmresults = maximum jump hello power factorial tolower assembly-symbol
 
 all:
 
