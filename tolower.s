@@ -36,14 +36,18 @@ ERR_file_not_open_len = . - ERR_file_not_open
 .section .text
 .globl _start
 
+.set _errmsg,    -8
+.set _errmsglen, -16
+.set _infd,      -24
+.set _outfd,     -32
 _start:
 	mov %rsp, %rbp
 	sub $32, %rsp
 
-	movq $0, -8(%rbp)  # errmsg
-	movq $0, -16(%rbp) # errmsglen
-	movq $0, -24(%rbp) # input fd
-	movq $0, -32(%rbp) # output fd
+	movq $0, _errmsg(%rbp)
+	movq $0, _errmsglen(%rbp)
+	movq $0, _infd(%rbp)
+	movq $0, _outfd(%rbp)
 
 	cmp $1, (%rbp)
 	je use_standard_streams
@@ -51,8 +55,8 @@ _start:
 	cmp $3, (%rbp)
 	je use_files
 
-	movq $ERR_bad_args, -8(%rbp)
-	movq $ERR_bad_args_len, -16(%rbp)
+	movq $ERR_bad_args, _errmsg(%rbp)
+	movq $ERR_bad_args_len, _errmsglen(%rbp)
 	jmp failure
 
 use_standard_streams:
@@ -70,7 +74,7 @@ use_files:
 	syscall
 	cmp $0, %rax
 	jl file_not_open
-	mov %rax, -24(%rbp)
+	mov %rax, _infd(%rbp)
 
 	mov $SYS_open, %rax
 	mov 24(%rbp),  %rdi
@@ -81,26 +85,26 @@ use_files:
 	syscall
 	cmp $0, %rax
 	jl file_not_open
-	mov %rax, -32(%rbp)
+	mov %rax, _outfd(%rbp)
 
-	push -32(%rbp)
-	push -24(%rbp)
+	push _outfd(%rbp)
+	push _infd(%rbp)
 	call ioToLower
 	add $16, %rsp
 
 	mov $SYS_close, %rax
-	mov -24(%rbp),  %rdi
+	mov _infd(%rbp),  %rdi
 	syscall
 
 	mov $SYS_close, %rax
-	mov -32(%rbp),  %rdi
+	mov _outfd(%rbp),  %rdi
 	syscall
 
 	jmp goodbye
 
 file_not_open:
-	movq $ERR_file_not_open, -8(%rbp)
-	movq $ERR_file_not_open_len, -16(%rbp)
+	movq $ERR_file_not_open, _errmsg(%rbp)
+	movq $ERR_file_not_open_len, _errmsglen(%rbp)
 	jmp failure
 
 goodbye:
@@ -109,49 +113,47 @@ goodbye:
 	syscall
 
 failure:
-	mov $SYS_write, %rax
-	mov $2,         %rdi
-	mov -8(%rbp),   %rsi
-	mov -16(%rbp),  %rdx
+	mov $SYS_write,       %rax
+	mov $2,               %rdi
+	mov _errmsg(%rbp),    %rsi
+	mov _errmsglen(%rbp), %rdx
 	syscall
 
 	mov $SYS_exit, %rax
 	mov $1,        %rdi
 	syscall
 
-# args:
-#
-# 16(%rbp)  input fd
-# 24(%rbp)  output fd
-#
+.set _infd, 16
+.set _outfd, 24
+.set _nread, -8
 .type ioToLower, @function
 ioToLower:
 	push %rbp
 	mov %rsp, %rbp
 	sub $8, %rsp
 
-	movq $0, -8(%rbp) # nread
+	movq $0, _nread(%rbp)
 
 ioloop:
-	mov $SYS_read, %rax
-	mov 16(%rbp),  %rdi
-	mov $BUF,      %rsi
-	mov $NBUF,     %rdx
+	mov $SYS_read,   %rax
+	mov _infd(%rbp), %rdi
+	mov $BUF,        %rsi
+	mov $NBUF,       %rdx
 	syscall
-	mov %rax, -8(%rbp)
+	mov %rax, _nread(%rbp)
 
-	cmp $0, -8(%rbp)
+	cmp $0, _nread(%rbp)
 	je ioloopStop
 
-	push -8(%rbp)
+	push _nread(%rbp)
 	push $BUF
 	call strToLower
 	add $16, %rsp
 
-	mov $SYS_write, %rax
-	mov 24(%rbp),   %rdi
-	mov $BUF,       %rsi
-	mov -8(%rbp),   %rdx
+	mov $SYS_write,   %rax
+	mov _outfd(%rbp), %rdi
+	mov $BUF,         %rsi
+	mov _nread(%rbp), %rdx
 	syscall
 
 	jmp ioloop
@@ -160,26 +162,23 @@ ioloopStop:
 	pop %rbp
 	ret
 
-# args:
-#
-# 16(%rbp)  str
-# 24(%rbp)  len
-#
 # registers used:
 #
 # r12  str
 # r13  i
 #
+.set _str, 16
+.set _len, 24
 .type strToLower, @function
 strToLower:
 	push %rbp
 	mov %rsp, %rbp
 
-	mov 16(%rbp), %r12
+	mov _str(%rbp), %r12
 
 	mov $0, %r13
 strToLowerLoop:
-	cmp 24(%rbp), %r13
+	cmp _len(%rbp), %r13
 	jge strToLowerLoopStop
 
 	cmpb $'A', (%r12, %r13, 1)
