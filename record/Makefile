@@ -1,14 +1,14 @@
 results = create-records
-
-.INTERMEDIATE: common.o $(foreach r,$(results),$(r).o)
+commons = common.o
+objects = $(commons) $(foreach r,$(results),$(r).o)
 
 all: $(results)
 
-%.o: %.s def.s
+$(objects): %.o: %.s def.s
 	as -o $@ $<
 
-$(results): %: %.o common.o
-	ld -o $@ $< common.o
+$(results): %: %.o $(commons)
+	ld -o $@ $< $(commons)
 
 clean:
 	rm -f $(results)
