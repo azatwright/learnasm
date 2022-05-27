@@ -4,10 +4,10 @@ results = create-records
 
 all: $(results)
 
-%.o: %.s
+%.o: %.s def.s
 	as -o $@ $<
 
-$(results): %: %.o common.o def.s
+$(results): %: %.o common.o
 	ld -o $@ $< common.o
 
 clean:
