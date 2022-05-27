@@ -11,5 +11,5 @@ $(results): %: %.o $(commons)
 	ld -o $@ $< $(commons)
 
 clean:
-	rm -f $(results)
+	rm -f $(results) $(objects)
 	rm -f records.bin
