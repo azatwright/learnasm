@@ -54,15 +54,17 @@ _start:
 	syscall
 	mov %rax, _fd(%rbp)
 
+	push $USER_SIZE
 	push $azat
 	push _fd(%rbp)
-	call writeUser
-	add $16, %rsp
+	call write2
+	add $24, %rsp
 
+	push $USER_SIZE
 	push $linus
 	push _fd(%rbp)
-	call writeUser
-	add $16, %rsp
+	call write2
+	add $24, %rsp
 
 	mov $SYS_close, %rax
 	mov _fd(%rbp),  %rdi
