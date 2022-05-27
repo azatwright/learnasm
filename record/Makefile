@@ -1,5 +1,5 @@
-results = create-records
-commons = common.o
+results = create-records read-records
+commons = common.o lib.o
 objects = $(commons) $(foreach r,$(results),$(r).o)
 
 all: $(results)
