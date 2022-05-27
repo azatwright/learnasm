@@ -1,13 +1,14 @@
-.SUFFIXES:
-
 asmresults = maximum jump hello power factorial tolower assembly-symbol
+asmobjects = $(foreach ar,$(asmresults),$(ar).o)
+
+.INTERMEDIATE: $(asmobjects)
 
 all:
 
-%.o: %.s
+$(asmobjects): %.o: %.s
 	as -o $@ $<
 
-%: %.o
+$(asmresults): %: %.o
 	ld -o $@ $<
 
 clean:
