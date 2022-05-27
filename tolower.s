@@ -1,24 +1,6 @@
 # NOTE: I cannot reproduce the case when write(2) writes less than `count` bytes.
 
-# ref:
-#
-# https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/entry/syscalls/syscall_64.tbl
-#
-.equ SYS_read,  0
-.equ SYS_write, 1
-.equ SYS_open,  2
-.equ SYS_close, 3
-.equ SYS_exit,  60
-
-# ref:
-#
-# https://git.musl-libc.org/cgit/musl/tree/include/fcntl.h
-# https://git.musl-libc.org/cgit/musl/tree/arch/generic/bits/fcntl.h
-#
-.equ O_RDONLY,   00
-.equ O_WRONLY,   01
-.equ O_CREAT,  0100
-.equ O_TRUNC, 01000
+.include "linux_64.s"
 
 .equ NBUF, 5
 
