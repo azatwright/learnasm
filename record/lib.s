@@ -19,8 +19,8 @@ itoa:
 	mov %rsp, %rbp
 	sub $16, %rsp
 
-	mov 16(%rbp), %r12
-	mov 24(%rbp), %r13
+	mov _n(%rbp), %r12
+	mov _s(%rbp), %r13
 	mov $0, %r14
 
 	movq $0, _len(%rbp)
