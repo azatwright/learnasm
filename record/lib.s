@@ -4,6 +4,82 @@
 
 # registers used:
 #
+# r12  number
+# r13  s
+# r14  i
+# r15  _len - i - 1
+#
+.type itoa, @function
+.globl itoa
+.set _n, 16
+.set _s, 24
+.set _len, -8
+.set _nabs, -16
+itoa:
+	push %rbp
+	mov %rsp, %rbp
+	sub $16, %rsp
+
+	mov 16(%rbp), %r12
+	mov 24(%rbp), %r13
+	mov $0, %r14
+
+	movq $0, _len(%rbp)
+	mov %r12, _nabs(%rbp)
+
+	cmp $0, %r12
+	jge itoaLoop1
+
+	movb $'-', (%r13, %r14, 1)
+	incq _len(%rbp)
+	imul $-1, %r12
+	mov %r12, _nabs(%rbp)
+
+itoaLoop1:
+	cmp $0, %r12
+	je itoaLoop1End
+
+	mov $0, %rdx
+	mov %r12, %rax
+	mov $10, %rbx
+	idiv %rbx
+
+	incq _len(%rbp)
+
+	mov %rax, %r12
+	jmp itoaLoop1
+
+itoaLoop1End:
+	mov _nabs(%rbp), %r12
+
+itoaLoop2:
+	cmp $0, %r12
+	je itoaLoop2End
+
+	mov $0, %rdx
+	mov %r12, %rax
+	mov $10, %rbx
+	idiv %rbx
+
+	mov _len(%rbp), %r15
+	sub %r14, %r15
+	sub $1, %r15
+	mov %dl, (%r13, %r15, 1)
+	add $'0', (%r13, %r15, 1)
+	inc %r14
+
+	mov %rax, %r12
+	jmp itoaLoop2
+
+itoaLoop2End:
+	mov _len(%rbp), %rax
+
+	mov %rbp, %rsp
+	pop %rbp
+	ret
+
+# registers used:
+#
 # rax  length of the string, returned
 # r12  string address, preserved
 #

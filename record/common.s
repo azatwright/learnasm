@@ -1,6 +1,9 @@
 .include "def.s"
 .include "linux_64.s"
 
+.section .bss
+.lcomm dbgAgeBuf, 50
+
 .section .data
 
 dbgName: .ascii "Name: "
@@ -11,6 +14,9 @@ dbgSurnameLen = . - dbgSurname
 
 dbgAddress: .ascii "Address: "
 dbgAddressLen = . - dbgAddress
+
+dbgAge: .ascii "Age: "
+dbgAgeLen = . - dbgAge
 
 newline: .ascii "\n"
 
@@ -89,6 +95,32 @@ debugUser:
 	push %rax
 	push _buf(%rbp)
 	add $USER_ADDRESS, (%rsp)
+	push $1
+	call write2
+	add $24, %rsp
+
+	push $1
+	push $newline
+	push $1
+	call write2
+	add $24, %rsp
+
+	push $dbgAgeLen
+	push $dbgAge
+	push $1
+	call write2
+	add $24, %rsp
+
+	mov _buf(%rbp), %r12
+	add $USER_AGE, %r12
+
+	push $dbgAgeBuf
+	push (%r12)
+	call itoa
+	add $16, %rsp
+
+	push %rax
+	push $dbgAgeBuf
 	push $1
 	call write2
 	add $24, %rsp
