@@ -7,7 +7,6 @@
 # r12  number
 # r13  s
 # r14  i
-# r15  _len - i - 1
 #
 .type itoa, @function
 .globl itoa
@@ -51,6 +50,8 @@ itoaLoop1:
 
 itoaLoop1End:
 	mov _nabs(%rbp), %r12
+	mov _len(%rbp), %r14
+	dec %r14
 
 itoaLoop2:
 	cmp $0, %r12
@@ -61,12 +62,9 @@ itoaLoop2:
 	mov $10, %rbx
 	idiv %rbx
 
-	mov _len(%rbp), %r15
-	sub %r14, %r15
-	sub $1, %r15
-	mov %dl, (%r13, %r15, 1)
-	add $'0', (%r13, %r15, 1)
-	inc %r14
+	mov %dl, (%r13, %r14, 1)
+	add $'0', (%r13, %r14, 1)
+	dec %r14
 
 	mov %rax, %r12
 	jmp itoaLoop2
