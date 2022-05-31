@@ -6,5 +6,5 @@
 .set USER_NAME_SIZE,    40
 .set USER_SURNAME_SIZE, 40
 .set USER_ADDRESS_SIZE, 240
-.set USER_AGE_SIZE,     4
-.set USER_SIZE,         324
+.set USER_AGE_SIZE,     8
+.set USER_SIZE,         328
