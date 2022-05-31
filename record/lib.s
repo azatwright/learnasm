@@ -35,9 +35,6 @@ itoa:
 	mov %r12, _nabs(%rbp)
 
 itoaLoop1:
-	cmp $0, %r12
-	je itoaLoop1End
-
 	mov $0, %rdx
 	mov %r12, %rax
 	mov $10, %rbx
@@ -46,17 +43,14 @@ itoaLoop1:
 	incq _len(%rbp)
 
 	mov %rax, %r12
-	jmp itoaLoop1
+	cmp $0, %r12
+	jne itoaLoop1
 
-itoaLoop1End:
 	mov _nabs(%rbp), %r12
 	mov _len(%rbp), %r14
 	dec %r14
 
 itoaLoop2:
-	cmp $0, %r12
-	je itoaLoop2End
-
 	mov $0, %rdx
 	mov %r12, %rax
 	mov $10, %rbx
@@ -67,9 +61,9 @@ itoaLoop2:
 	dec %r14
 
 	mov %rax, %r12
-	jmp itoaLoop2
+	cmp $0, %r12
+	jne itoaLoop2
 
-itoaLoop2End:
 	mov _len(%rbp), %rax
 
 	mov %rbp, %rsp
