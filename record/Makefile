@@ -1,5 +1,5 @@
 results = create-records read-records sub-age
-commons = common.o lib.o
+commons = common.o lib.o linux_64_syscall.o
 objects = $(commons) $(foreach r,$(results),$(r).o)
 
 all: $(results)

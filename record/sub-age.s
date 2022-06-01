@@ -29,7 +29,7 @@ _start:
 	push $0
 	push $O_RDWR
 	push $file
-	call open2
+	call sys_open
 	add $24, %rsp
 
 	cmp $0, %rax
@@ -41,7 +41,7 @@ ioloop:
 	push $USER_SIZE
 	push $BUF
 	push _fd(%rbp)
-	call read2
+	call sys_read
 	add $24, %rsp
 
 	cmp $0, %rax
@@ -53,7 +53,7 @@ ioloop:
 	push $SEEK_CUR
 	push $-USER_SIZE
 	push _fd(%rbp)
-	call lseek2
+	call sys_lseek
 	add $24, %rsp
 
 	decq USER_AGE + BUF
@@ -61,17 +61,17 @@ ioloop:
 	push $USER_SIZE
 	push $BUF
 	push _fd(%rbp)
-	call write2
+	call sys_write
 	add $24, %rsp
 
 	jmp ioloop
 
 ioloopEnd:
 	push _fd(%rbp)
-	call close2
+	call sys_close
 
 	push $0
-	call exit2
+	call sys_exit
 
 errFileNotOpened:
 	movq $ERR_file_not_opened, _err(%rbp)
@@ -87,7 +87,7 @@ failure:
 	push _nerr(%rbp)
 	push _err(%rbp)
 	push $2
-	call write2
+	call sys_write
 
 	push $1
-	call exit2
+	call sys_exit

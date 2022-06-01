@@ -57,13 +57,13 @@ _start:
 	push $USER_SIZE
 	push $azat
 	push _fd(%rbp)
-	call write2
+	call sys_write
 	add $24, %rsp
 
 	push $USER_SIZE
 	push $linus
 	push _fd(%rbp)
-	call write2
+	call sys_write
 	add $24, %rsp
 
 	mov $SYS_close, %rax

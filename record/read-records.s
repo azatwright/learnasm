@@ -47,7 +47,7 @@ loop:
 	push $USER_SIZE
 	push $BUF
 	push _fd(%rbp)
-	call read2
+	call sys_read
 	add $24, %rsp
 
 	cmp $0, %rax
@@ -63,7 +63,7 @@ loop:
 	push $nsep
 	push $sep
 	push $1
-	call write2
+	call sys_write
 	add $24, %rsp
 
 	jmp loop
@@ -87,7 +87,7 @@ epicfail:
 	push _nerr(%rbp)
 	push _err(%rbp)
 	push $2
-	call write2
+	call sys_write
 	add $24, %rsp
 
 	mov $SYS_exit, %rax
