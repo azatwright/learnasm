@@ -36,7 +36,7 @@ debugUser:
 	add $24, %rsp
 
 	push _buf(%rbp)
-	call strlen
+	call lib_strlen
 	add $8, %rsp
 
 	push %rax
@@ -59,7 +59,7 @@ debugUser:
 
 	push _buf(%rbp)
 	add $USER_SURNAME, (%rsp)
-	call strlen
+	call lib_strlen
 	add $8, %rsp
 
 	push %rax
@@ -89,7 +89,7 @@ debugUser:
 
 	push _buf(%rbp)
 	add $USER_ADDRESS, (%rsp)
-	call strlen
+	call lib_strlen
 	add $8, %rsp
 
 	push %rax
@@ -116,7 +116,7 @@ debugUser:
 
 	push $dbgAgeBuf
 	push (%r12)
-	call itoa
+	call lib_itoa
 	add $16, %rsp
 
 	push %rax

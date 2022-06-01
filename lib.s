@@ -8,13 +8,13 @@
 # r13  s
 # r14  i
 #
-.type itoa, @function
-.globl itoa
+.type lib_itoa, @function
+.globl lib_itoa
 .set _n, 16
 .set _s, 24
 .set _len, -8
 .set _nabs, -16
-itoa:
+lib_itoa:
 	push %rbp
 	mov %rsp, %rbp
 	sub $16, %rsp
@@ -75,10 +75,10 @@ itoaLoop2:
 # rax  length of the string, returned
 # r12  string address, preserved
 #
-.type strlen, @function
-.globl strlen
+.type lib_strlen, @function
+.globl lib_strlen
 .set _s, 16
-strlen:
+lib_strlen:
 	push %rbp
 	mov %rsp, %rbp
 
