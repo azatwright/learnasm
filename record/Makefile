@@ -1,4 +1,4 @@
-results = create-records read-records
+results = create-records read-records sub-age
 commons = common.o lib.o
 objects = $(commons) $(foreach r,$(results),$(r).o)
 

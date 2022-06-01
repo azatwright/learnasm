@@ -6,6 +6,7 @@
 .set SYS_write, 1
 .set SYS_open,  2
 .set SYS_close, 3
+.set SYS_lseek, 8
 .set SYS_exit,  60
 
 # ref:
@@ -15,5 +16,10 @@
 #
 .equ O_RDONLY,    00
 .equ O_WRONLY,    01
+.equ O_RDWR,      02
 .equ O_CREAT,   0100
 .equ O_TRUNC,  01000
+
+.set SEEK_SET, 0
+.set SEEK_CUR, 1
+.set SEEK_END, 2
