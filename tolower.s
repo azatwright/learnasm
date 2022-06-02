@@ -129,7 +129,7 @@ ioloop:
 
 	push _nread(%rbp)
 	push $BUF
-	call strToLower
+	call lib_tolower
 	add $16, %rsp
 
 	mov $SYS_write,   %rax
@@ -140,42 +140,6 @@ ioloop:
 
 	jmp ioloop
 ioloopStop:
-	mov %rbp, %rsp
-	pop %rbp
-	ret
-
-# registers used:
-#
-# r12  str
-# r13  i
-#
-.set _str, 16
-.set _len, 24
-.type strToLower, @function
-strToLower:
-	push %rbp
-	mov %rsp, %rbp
-
-	mov _str(%rbp), %r12
-
-	mov $0, %r13
-strToLowerLoop:
-	cmp _len(%rbp), %r13
-	jge strToLowerLoopStop
-
-	cmpb $'A', (%r12, %r13, 1)
-	jl strToLowerLoopContinue
-	cmpb $'Z', (%r12, %r13, 1)
-	jg strToLowerLoopContinue
-
-	sub $'A', (%r12, %r13, 1)
-	add $'a', (%r12, %r13, 1)
-
-strToLowerLoopContinue:
-	inc %r13
-	jmp strToLowerLoop
-strToLowerLoopStop:
-
 	mov %rbp, %rsp
 	pop %rbp
 	ret

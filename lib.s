@@ -214,3 +214,40 @@ powerLoopStop:
 	mov %rbp, %rsp
 	pop %rbp
 	ret
+
+# registers used:
+#
+# r12  str
+# r13  i
+#
+.type lib_tolower, @function
+.globl lib_tolower
+.set _str, 16
+.set _len, 24
+lib_tolower:
+	push %rbp
+	mov %rsp, %rbp
+
+	mov _str(%rbp), %r12
+
+	mov $0, %r13
+tolower:
+	cmp _len(%rbp), %r13
+	jge tolowerEnd
+
+	cmpb $'A', (%r12, %r13, 1)
+	jl tolowerContinue
+	cmpb $'Z', (%r12, %r13, 1)
+	jg tolowerContinue
+
+	sub $'A', (%r12, %r13, 1)
+	add $'a', (%r12, %r13, 1)
+
+tolowerContinue:
+	inc %r13
+	jmp tolower
+
+tolowerEnd:
+	mov %rbp, %rsp
+	pop %rbp
+	ret
