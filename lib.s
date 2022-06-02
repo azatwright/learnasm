@@ -1,5 +1,3 @@
-.include "linux_64.s"
-
 .section .text
 
 # registers used:
