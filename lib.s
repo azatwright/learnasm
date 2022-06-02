@@ -188,3 +188,35 @@ arrmaxqEnd:
 	mov %rbp, %rsp
 	pop %rbp
 	ret
+
+# registers used:
+#
+# %r8   base
+# %r9   power
+# %r10  current result
+# %rax  return
+#
+.type lib_power, @function
+.globl lib_power
+.set _base, 16
+.set _power, 24
+lib_power:
+	push %rbp
+	mov %rsp, %rbp
+
+	mov _base(%rbp), %r8
+	mov _power(%rbp), %r9
+	mov %r8, %r10
+
+powerLoop:
+	cmp $1, %r9
+	je powerLoopStop
+	imul %r8, %r10
+	dec %r9
+	jmp powerLoop
+
+powerLoopStop:
+	mov %r10, %rax
+	mov %rbp, %rsp
+	pop %rbp
+	ret
