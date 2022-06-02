@@ -134,38 +134,3 @@ debugUser:
 	mov %rbp, %rsp
 	pop %rbp
 	ret
-
-# registers used:
-#
-# r12  *buf
-# r13  i
-# rax  chksum
-#
-.type usrChksum, @function
-.globl usrChksum
-.set _buf, 16
-.set _i, -8
-.set _chksum, -16
-usrChksum:
-	push %rbp
-	mov %rsp, %rbp
-	sub $16, %rsp
-
-	mov _buf(%rbp), %r12
-	mov $0, %r13
-	mov $0, %rax
-
-usrChksumLoop:
-	cmpq $USER_SIZE-USER_CHKSUM_SIZE, %r13
-	je usrChksumLoopEnd
-
-	addb (%r12, %r13, 1), %al
-	imul $23, %rax
-
-	inc %r13
-	jmp usrChksumLoop
-
-usrChksumLoopEnd:
-	mov %rbp, %rsp
-	pop %rbp
-	ret

@@ -56,9 +56,10 @@ loop:
 	cmp $USER_SIZE, %rax
 	jl errCorruptedData
 
+	push $USER_SIZE-USER_CHKSUM_SIZE
 	push $BUF
-	call usrChksum
-	add $8, %rsp
+	call lib_strhash
+	add $16, %rsp
 	cmp USER_CHKSUM+BUF, %rax
 	jne errCorruptedData
 
