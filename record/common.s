@@ -1,5 +1,4 @@
 .include "def.s"
-.include "linux_64.s"
 
 .section .bss
 .lcomm dbgAgeBuf, 50
