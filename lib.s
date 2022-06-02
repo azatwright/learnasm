@@ -249,3 +249,37 @@ tolowerEnd:
 	mov %rbp, %rsp
 	pop %rbp
 	ret
+
+# registers used:
+#
+# r12  *s
+# r13  i
+# rax  hash
+#
+.type lib_strhash, @function
+.globl lib_strhash
+.set _s, 16
+.set _n, 24
+lib_strhash:
+	push %rbp
+	mov %rsp, %rbp
+	sub $16, %rsp
+
+	mov _s(%rbp), %r12
+	mov $0, %r13
+	mov $0, %rax
+
+strhashLoop:
+	cmp _n(%rbp), %r13
+	je strhashLoopEnd
+
+	addb (%r12, %r13, 1), %al
+	imul $23, %rax
+
+	inc %r13
+	jmp strhashLoop
+
+strhashLoopEnd:
+	mov %rbp, %rsp
+	pop %rbp
+	ret
