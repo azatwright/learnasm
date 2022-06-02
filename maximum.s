@@ -12,8 +12,6 @@ _start:
 	push $arr
 	call lib_arrmaxq
 	add $8, %rsp
-	push %rax
 
-	mov $60, %rax
-	mov (%rsp), %rdi
-	syscall
+	push %rax
+	call sys_exit
