@@ -50,13 +50,12 @@ ioloop:
 	cmp $USER_SIZE, %rax
 	jl errCorruptData
 
-	push $USER_SIZE-USER_CHKSUM_SIZE
 	push $BUF
-	call lib_strhash
-	add $16, %rsp
+	call usrConsistent
+	add $8, %rsp
 
-	cmp %rax, USER_CHKSUM+BUF
-	jne errCorruptData
+	cmp $0, %rax
+	je errCorruptData
 
 	push $SEEK_CUR
 	push $-USER_SIZE
@@ -66,11 +65,9 @@ ioloop:
 
 	decq USER_AGE + BUF
 
-	push $USER_SIZE-USER_CHKSUM_SIZE
 	push $BUF
-	call lib_strhash
-	add $16, %rsp
-	mov %rax, USER_CHKSUM+BUF
+	call usrRehash
+	add $8, %rsp
 
 	push $USER_SIZE
 	push $BUF

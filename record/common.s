@@ -134,3 +134,53 @@ debugUser:
 	mov %rbp, %rsp
 	pop %rbp
 	ret
+
+.type usrConsistent, @function
+.globl usrConsistent
+.set _buf, 16
+usrConsistent:
+	push %rbp
+	mov %rsp, %rbp
+
+	push $USER_SIZE-USER_CHKSUM_SIZE
+	push _buf(%rbp)
+	call lib_strhash
+	add $16, %rsp
+
+	mov _buf(%rbp), %r12
+	mov USER_CHKSUM(%r12), %r12
+
+	cmp %rax, %r12
+	jne usrConsistentFalse
+	jmp usrConsistentTrue
+
+usrConsistentFalse:
+	mov $0, %rax
+	mov %rbp, %rsp
+	pop %rbp
+	ret
+
+usrConsistentTrue:
+	mov $1, %rax
+	mov %rbp, %rsp
+	pop %rbp
+	ret
+
+.type usrRehash, @function
+.globl usrRehash
+.set _buf, 16
+usrRehash:
+	push %rbp
+	mov %rsp, %rbp
+
+	push $USER_SIZE-USER_CHKSUM_SIZE
+	push _buf(%rbp)
+	call lib_strhash
+	add $16, %rsp
+
+	mov _buf(%rbp), %r12
+	mov %rax, USER_CHKSUM(%r12)
+
+	mov %rbp, %rsp
+	pop %rbp
+	ret

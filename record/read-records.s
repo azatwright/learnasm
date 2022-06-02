@@ -56,12 +56,12 @@ loop:
 	cmp $USER_SIZE, %rax
 	jl errCorruptedData
 
-	push $USER_SIZE-USER_CHKSUM_SIZE
 	push $BUF
-	call lib_strhash
-	add $16, %rsp
-	cmp USER_CHKSUM+BUF, %rax
-	jne errCorruptedData
+	call usrConsistent
+	add $8, %rsp
+
+	cmp $0, %rax
+	je errCorruptedData
 
 	push $BUF
 	call debugUser

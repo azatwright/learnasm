@@ -56,17 +56,13 @@ _start:
 	syscall
 	mov %rax, _fd(%rbp)
 
-	push $USER_SIZE-USER_CHKSUM_SIZE
 	push $azat
-	call lib_strhash
-	add $16, %rsp
-	mov %rax, USER_CHKSUM+azat
+	call usrRehash
+	add $8, %rsp
 
-	push $USER_SIZE-USER_CHKSUM_SIZE
 	push $linus
-	call lib_strhash
-	add $16, %rsp
-	mov %rax, USER_CHKSUM+linus
+	call usrRehash
+	add $8, %rsp
 
 	push $USER_SIZE
 	push $azat
