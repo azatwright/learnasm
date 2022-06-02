@@ -19,6 +19,7 @@ azat:
 		.byte 0
 	.endr
 	.quad 23
+	.quad 0
 
 linus:
 	.ascii "Linus"
@@ -34,6 +35,7 @@ linus:
 		.byte 0
 	.endr
 	.quad 52
+	.quad 0
 
 .section .text
 
@@ -53,6 +55,16 @@ _start:
 	mov $0666,     %rdx
 	syscall
 	mov %rax, _fd(%rbp)
+
+	push $azat
+	call usrChksum
+	add $8, %rsp
+	mov %rax, USER_CHKSUM+azat
+
+	push $linus
+	call usrChksum
+	add $8, %rsp
+	mov %rax, USER_CHKSUM+linus
 
 	push $USER_SIZE
 	push $azat

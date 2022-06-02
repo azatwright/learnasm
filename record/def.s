@@ -2,9 +2,11 @@
 .set USER_SURNAME, 40
 .set USER_ADDRESS, 80
 .set USER_AGE,     320
+.set USER_CHKSUM,  328
 
 .set USER_NAME_SIZE,    40
 .set USER_SURNAME_SIZE, 40
 .set USER_ADDRESS_SIZE, 240
 .set USER_AGE_SIZE,     8
-.set USER_SIZE,         328
+.set USER_CHKSUM_SIZE,  8
+.set USER_SIZE,         336

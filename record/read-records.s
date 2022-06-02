@@ -57,6 +57,12 @@ loop:
 	jl errCorruptedData
 
 	push $BUF
+	call usrChksum
+	add $8, %rsp
+	cmp USER_CHKSUM+BUF, %rax
+	jne errCorruptedData
+
+	push $BUF
 	call debugUser
 	add $8, %rsp
 
