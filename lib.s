@@ -101,3 +101,47 @@ strlenLoopEnd:
 	mov %rbp, %rsp
 	pop %rbp
 	ret
+
+# registers used:
+#
+# r8   n
+# rax  !n
+#
+.type lib_fact, @function
+.globl lib_fact
+.set _n, 16
+lib_fact:
+	push %rbp
+	mov %rsp, %rbp
+	mov _n(%rbp), %r8
+
+	cmp $0, %r8
+	je factStopRecursion
+	jl factPanic
+
+	# preserve registers
+	push %r8
+
+	push %r8
+	decq (%rsp)
+	call lib_fact
+	add $8, %rsp
+
+	# restore registers
+	pop %r8
+
+	imul %r8, %rax
+	jmp factEnd
+
+factStopRecursion:
+	mov $1, %rax
+	jmp factEnd
+factPanic:
+	mov $69, %rax
+	jmp factEnd
+
+# assume %rax is set
+factEnd:
+	mov %rbp, %rsp
+	pop %rbp
+	ret
