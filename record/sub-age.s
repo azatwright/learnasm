@@ -50,6 +50,13 @@ ioloop:
 	cmp $USER_SIZE, %rax
 	jl errCorruptData
 
+	push $BUF
+	call usrChksum
+	add $8, %rsp
+
+	cmp %rax, USER_CHKSUM+BUF
+	jne errCorruptData
+
 	push $SEEK_CUR
 	push $-USER_SIZE
 	push _fd(%rbp)
@@ -57,6 +64,11 @@ ioloop:
 	add $24, %rsp
 
 	decq USER_AGE + BUF
+
+	push $BUF
+	call usrChksum
+	add $8, %rsp
+	mov %rax, USER_CHKSUM+BUF
 
 	push $USER_SIZE
 	push $BUF
