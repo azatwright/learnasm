@@ -145,3 +145,46 @@ factEnd:
 	mov %rbp, %rsp
 	pop %rbp
 	ret
+
+# registers used:
+#
+# r8   array address
+# r9   index
+# r10  current value
+# rax  max value's index & return
+#
+# Note that for a .long array the following instructions must be used:
+#
+#         mov (%r8, %r9, 4), %r10d
+#         cmp %r10d, (%r8, %rax, 4)
+#
+# I have no idea why is the 'd' suffix necessary.
+#
+.type lib_arrmaxq, @function
+.globl lib_arrmaxq
+.set _arr, 16
+lib_arrmaxq:
+	push %rbp
+	mov %rsp, %rbp
+	mov _arr(%rbp), %r8
+
+	mov $0, %r9
+	mov $0, %rax
+
+arrmaxqLoop:
+	mov (%r8, %r9, 8), %r10
+	cmp $0, %r10
+	je arrmaxqEnd
+	cmp %r10, (%r8, %rax, 8)
+	jl arrmaxqLoopNewMax
+	inc %r9
+	jmp arrmaxqLoop
+arrmaxqLoopNewMax:
+	mov %r9, %rax
+	inc %r9
+	jmp arrmaxqLoop
+
+arrmaxqEnd:
+	mov %rbp, %rsp
+	pop %rbp
+	ret
