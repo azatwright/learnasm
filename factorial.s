@@ -7,8 +7,4 @@ _start:
 	add $8, %rsp
 
 	push %rax
-
-	mov $60, %rax    # SYS_exit
-	mov (%rsp), %rdi # status
-	syscall
-	push (%rsp)
+	call sys_exit
