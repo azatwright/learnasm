@@ -1,5 +1,76 @@
 .section .text
 
+# keep reading until _nread == _n or _s[_nread-1] == '\n'
+# discard '\n' if found
+#
+# note that unread characters are not discarded
+#
+# returns strlen in rax
+#
+.type lib_gets_s, @function
+.globl lib_gets_s
+.set _s, 16
+.set _n, 24
+.set _nread, -8
+lib_gets_s:
+	push %rbp
+	mov %rsp, %rbp
+	sub $8, %rsp
+
+	movq $0, _nread(%rbp)
+
+get_s_loop:
+
+	# read `_n - _nread` characters
+	# write to &_s[_nread]
+	#
+	push _n(%rbp)
+	push _s(%rbp)
+	mov _nread(%rbp), %r12
+	add %r12, (%rsp)
+	push $0
+	call sys_read
+	add $24, %rsp
+
+	cmp $0, %rax
+	je get_s_end
+
+	add %rax, _nread(%rbp)
+
+	# stop if _s[_nread-1] == '\n'
+	#
+	mov _nread(%rbp), %r12
+	sub $1, %r12
+	mov _s(%rbp), %r13
+	cmpb $'\n', (%r13, %r12, 1)
+	je get_s_newlineFound
+
+	# stop if _n == _nread
+	#
+	mov _n(%rbp), %r12
+	cmp %r12, _nread(%rbp)
+	je get_s_end
+
+	jmp get_s_loop
+
+get_s_newlineFound:
+
+	# unset newline
+	#
+	mov _nread(%rbp), %r12
+	sub $1, %r12
+	mov _s(%rbp), %r13
+	movb $0, (%r13, %r12, 1)
+
+	decq _nread(%rbp)
+	jmp get_s_end
+
+get_s_end:
+	mov _nread(%rbp), %rax
+	mov %rbp, %rsp
+	pop %rbp
+	ret
+
 # registers used:
 #
 # r12  number
